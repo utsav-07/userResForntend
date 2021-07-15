@@ -1,24 +1,69 @@
-import logo from './logo.svg';
+
 import './App.css';
+import Navbar from './components/Navbar';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Home from './components/Pges/Home';
+import About from './components/Pges/About';
+import React , {useState , useEffect} from 'react'
+
+
 
 function App() {
+
+  const getMode = () => {
+    return JSON.parse(localStorage.getItem("mode")) || false
+  }
+
+   const[dark , setDark] = useState(getMode);
+
+  
+  useEffect(() => {
+    localStorage.setItem("mode" , JSON.stringify(dark))
+}, [dark])
+
+console.log("starting",dark);
+
+let body = document.body;
+
+   if(dark){
+      body.style.background = "rgb(46,45,45)";
+    }
+    else{
+      body.style.background = "white";
+    }
+
+
+
+
+const loadData = (data) => {
+    
+    
+    setDark(data)
+    // if(dark){
+    //   body.style.background = "black";
+    // }
+    // else{
+    //   body.style.background = "white";
+    // }
+    //console.log("hey",dark);
+}
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+
+    <>
+    <Router>
+
+        <Navbar loadData = {loadData} dark = {dark}/>
+        <Switch>
+            {/* <Route path = '/' exact component={Home}/> */}
+            <Route exact path='/' render={props => <Home dark={dark} />}
+ />
+            <Route path = '/about' component = {About}/>
+        </Switch>
+    </Router>
+   
+
+   </>
   );
 }
 
